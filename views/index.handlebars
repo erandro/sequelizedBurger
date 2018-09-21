@@ -1,0 +1,109 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <p id="main_title">The Burger's Code</p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-4 text-center">
+            <h4 class="the_update_title">Update burgers:</h4>
+            <ul class="the_update_ul">
+                {{#each burgers}}
+                {{#unless devoured}}
+                {{> burgers/burger-block burger=this}}
+                {{/unless}}
+                {{/each}}
+            </ul>
+        </div>
+
+        <div class="col-sm-4 text-center">
+
+            <div id="gif_holder">
+                <img class="img-fluid" src="https://i.gifer.com/1I0k.gif" alt="Spining Burger">
+            </div>
+            <div>
+                <h4 class="the_post_title"></h4>Post a Burger</h4>
+                <form class="create-form text-center">
+                    <div class="form-group">
+                        <input class="text-center the_post_input" type="text" id="burger" name="name" placeholder="Burger Name">
+                    </div>
+                    <button class="the_post_button" type="submit">Post!</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-sm-4 text-center">
+            <h4 class="the_droped_title">Droped burgers:</h4>
+            <ul class="the_droped_ul">
+                {{#each burgers}}
+                {{#if devoured}}
+                {{> burgers/burger-block burger=this}}
+                {{/if}}
+                {{/each}}
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // put
+        $(document).on("click", ".the_devoured_button", function (event) {
+            console.log("you are trying to update");
+            var id = $(this).data("id");
+            console.log(id);
+            var devoured = {
+                devoured: true
+            };
+            $.ajax("/api/burgers/" + id, {
+                type: "put",
+                data: devoured
+            }).then(
+                function () {
+                    console.log("devour that burger");
+                    location.reload();
+                }
+            );
+        });
+
+        // create
+        $(".the_post_button").on("click", function (event) {
+            console.log("this is working")
+            event.preventDefault();
+            var newBurger = {
+                burger_name: $("#burger").val().trim(),
+                devoured: false
+            };
+            console.log("create Boom!!!!!!!!!!!!!!!");
+            console.log(newBurger);
+            $.ajax("/api/burgers", {
+                type: "post",
+                data: newBurger
+            }).then(
+                function () {
+                    console.log("created new burger");
+                    location.reload();
+                }
+            );
+        });
+
+        // delete
+        $(".delete").on("click", function (event) {
+            var id = $(this).data("id");
+            console.log("delete Boom!!!!!!!!!!!!!!!")
+            $.ajax("/api/burgers/" + id, {
+                type: "delete"
+            }).then(
+                function () {
+                    console.log("this burger is no more!");
+                    location.reload();
+                }
+            );
+        });
+    });
+
+</script>
