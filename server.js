@@ -19,7 +19,7 @@ app.set("view engine", "handlebars");
 require("./routes/api-routes.js")(app);
 
 db.sequelize.sync().then(function () {
-    app.listen(PORT, function () {
+    app.listen(PORT || port, function () {
         console.log("App listening on PORT " + PORT);
     });
 });
